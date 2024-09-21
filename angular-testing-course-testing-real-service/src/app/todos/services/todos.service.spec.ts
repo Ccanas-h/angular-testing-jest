@@ -47,7 +47,7 @@ describe('TodosService', () => {
     });
   });
 
-  fdescribe('getTodos', () => {
+  describe('getTodos', () => {
     it('should fetch todos and update the signal', () => {
       // Llama al método getTodos()
       todosService.getTodos();
@@ -70,7 +70,7 @@ describe('TodosService', () => {
       // Simula la solicitud HTTP que se espera que se realice
       const req = httpTestingController.expectOne(baseUrl);
       expect(req.request.method).toBe('GET');
-      
+
       // Envía la respuesta simulada con los datos mock
       req.flush([{ text: 'foo', isCompleted: true, id: '1' }]);
 
@@ -81,6 +81,18 @@ describe('TodosService', () => {
     });
   });
 
+
+  describe('addTodo made by me', () => { 
+    it("add a todo to the list", () => {
+      todosService.addTodo("probando");
+      let req = httpTestingController.expectOne(baseUrl);
+      expect(req.request.method).toBe('POST');
+
+      req.flush({id:'1', text:"probando", isCompleted: false});
+      expect(todosService.todosSig()).toEqual([{id:'1', text:"probando", isCompleted: false}]);
+    });
+  });
+
   describe('addTodo', () => {
     it('creates a todo', () => {
       todosService.addTodo('foo');
@@ -88,6 +100,20 @@ describe('TodosService', () => {
       req.flush({ text: 'foo', isCompleted: true, id: '1' });
       expect(todosService.todosSig()).toEqual([
         { text: 'foo', isCompleted: true, id: '1' },
+      ]);
+    });
+  });
+
+  describe('changeTodo made by me', () => {
+    it('creates a todo', () => {
+      todosService.todosSig.set([{text:'foo', id: '1', isCompleted: false}]);
+      todosService.changeTodo("1", 'foo');
+      const req = httpTestingController.expectOne(baseUrl + "/1");
+      expect(req.request.method).toBe("PATCH");
+
+      req.flush({ text: 'foo', isCompleted: false, id: '1' });
+      expect(todosService.todosSig()).toEqual([
+        { text: 'foo', isCompleted: false, id: '1' },
       ]);
     });
   });
