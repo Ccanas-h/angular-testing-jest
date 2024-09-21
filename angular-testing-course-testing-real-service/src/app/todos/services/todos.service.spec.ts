@@ -5,11 +5,18 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { FilterEnum } from '../types/filter.enum';
+import { TodoInterface } from '../types/todo.interface';
 
 describe('TodosService', () => {
   let todosService: TodosService;
   let httpTestingController: HttpTestingController;
   const baseUrl = 'http://localhost:3004/todos';
+
+  const mockTodos: TodoInterface[] = [
+    { id: "1", text: 'Todo 1', isCompleted: false },
+    { id: "2", text: 'Todo 2', isCompleted: true }
+  ];
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -40,11 +47,33 @@ describe('TodosService', () => {
     });
   });
 
+  fdescribe('getTodos', () => {
+    it('should fetch todos and update the signal', () => {
+      // Llama al método getTodos()
+      todosService.getTodos();
+      // Simula la solicitud HTTP que se espera que se realice
+      const req = httpTestingController.expectOne(todosService.apiBaseUrl);
+      expect(req.request.method).toBe('GET');
+      // Envía la respuesta simulada con los datos mock
+      req.flush(mockTodos);
+      // Verifica que el signal se haya actualizado correctamente
+      expect(todosService.todosSig()).toEqual(mockTodos);
+    });
+  });
+
+
   describe('getTodos', () => {
     it('gets correct data', () => {
+      // Llama al método getTodos()
       todosService.getTodos();
+
+      // Simula la solicitud HTTP que se espera que se realice
       const req = httpTestingController.expectOne(baseUrl);
+
+      // Envía la respuesta simulada con los datos mock
       req.flush([{ text: 'foo', isCompleted: true, id: '1' }]);
+      
+      // Verifica que el signal se haya actualizado correctamente
       expect(todosService.todosSig()).toEqual([
         { text: 'foo', isCompleted: true, id: '1' },
       ]);
