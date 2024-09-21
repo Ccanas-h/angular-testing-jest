@@ -25,6 +25,26 @@ describe('PaginationComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('renders correct pagination MADE by me', () => {
+
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   it('renders correct pagination', () => {
     const pageContainers = fixture.debugElement.queryAll(
       By.css('[data-testid="page-container"]')
@@ -33,6 +53,8 @@ describe('PaginationComponent', () => {
     expect(pageContainers.length).toBe(5);
     expect(pageContainers[0].nativeElement.textContent).toContain('1');
   });
+
+
 
   it('should emit a clicked page', () => {
     const pageContainers = fixture.debugElement.queryAll(
