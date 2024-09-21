@@ -69,10 +69,11 @@ describe('TodosService', () => {
 
       // Simula la solicitud HTTP que se espera que se realice
       const req = httpTestingController.expectOne(baseUrl);
-
+      expect(req.request.method).toBe('GET');
+      
       // Envía la respuesta simulada con los datos mock
       req.flush([{ text: 'foo', isCompleted: true, id: '1' }]);
-      
+
       // Verifica que el signal se haya actualizado correctamente
       expect(todosService.todosSig()).toEqual([
         { text: 'foo', isCompleted: true, id: '1' },
