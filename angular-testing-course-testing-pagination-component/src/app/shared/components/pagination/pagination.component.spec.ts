@@ -4,7 +4,7 @@ import { UtilsService } from '../../services/utils.service';
 import { By } from '@angular/platform-browser';
 import { first } from 'rxjs';
 
-describe('PaginationComponent', () => {
+fdescribe('PaginationComponent', () => {
   let component: PaginationComponent;
   let fixture: ComponentFixture<PaginationComponent>;
   beforeEach(() => {
@@ -25,26 +25,6 @@ describe('PaginationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('renders correct pagination MADE by me', () => {
-
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   it('renders correct pagination', () => {
     const pageContainers = fixture.debugElement.queryAll(
       By.css('[data-testid="page-container"]')
@@ -53,8 +33,6 @@ describe('PaginationComponent', () => {
     expect(pageContainers.length).toBe(5);
     expect(pageContainers[0].nativeElement.textContent).toContain('1');
   });
-
-
 
   it('should emit a clicked page', () => {
     const pageContainers = fixture.debugElement.queryAll(
@@ -68,4 +46,18 @@ describe('PaginationComponent', () => {
     pageContainers[0].triggerEventHandler('click');
     expect(clickedPage).toEqual(1);
   });
+
+
+  it('should emit a clicked page made By ME', () => {
+    let paginaClickeada : number | undefined;
+    component.pageChangeEvent.subscribe(data => {
+      paginaClickeada = data;
+    });
+
+    component.selectPage(2);
+
+    expect(paginaClickeada).toBe(2);
+  });
+
+
 });
