@@ -34,6 +34,7 @@ fdescribe('FooterComponent', () => {
     });
 
     it('should be visible with todos MADE BY ME', () => {
+      // Simula la configuración del signal `todosSig` con un array que contiene un todo activo (no completado)
       todosService.todosSig.set([
         {
           id: '1',
@@ -41,13 +42,20 @@ fdescribe('FooterComponent', () => {
           isCompleted: false
         }
       ]);
+    
+      // Forza la detección de cambios para actualizar el DOM y reflejar el nuevo estado del signal `todosSig`
       fixture.detectChanges();
+  
+      // Busca el elemento del DOM que tiene el atributo `data-testid="footer"`
       const footer = fixture.debugElement.query(
         By.css('[data-testid="footer"]')
       );
+    
+      // Verifica que el elemento `footer` no tenga la clase `hidden`.
+      // Esto indica que el footer es visible porque hay al menos un todo activo
       expect(footer.classes['hidden']).not.toBeDefined();
-
     });
+    
 
     it('should be visible with todos', () => {
       todosService.todosSig.set([{ id: '1', text: 'foo', isCompleted: false }]);
@@ -111,19 +119,20 @@ fdescribe('FooterComponent', () => {
     });
 
     it('highlights changed filter ME', () => {
-      component.filterSig.set("");
+      // component.filterSig.set(FilterEnum.active); Puede ser de esta forma tambien. 
       const filterLinks = fixture.debugElement.queryAll(
         By.css('[data-testid="filterLink"]')
       );
 
-      expect(filterLinks[0].classes["selected"]).toBeDefined();
-      expect(component.filterSig()).toBe("all");
+      //Hacer click en opcion "Active" desde el dom. 
+      filterLinks[1].triggerEventHandler('click');
+      fixture.detectChanges();
+
+      expect(filterLinks[1].classes["selected"]).toBeDefined();
+      expect(component.filterSig()).toBe("active");
 
     });
 
-    // it('changes a filter ME', () => {
-
-    // });
   });
 
 
@@ -136,6 +145,8 @@ fdescribe('FooterComponent', () => {
     });
 
     it('highlights changed filter', () => {
+      //Aqui verifico que tras cambiar el estado del signal, este tras una deteccion de cambios
+      //Este tambien cambia lo que ve el usuario activado. 
       todosService.filterSig.set(FilterEnum.active);
       fixture.detectChanges();
       const filterLinks = fixture.debugElement.queryAll(
@@ -148,6 +159,8 @@ fdescribe('FooterComponent', () => {
       const filterLinks = fixture.debugElement.queryAll(
         By.css('[data-testid="filterLink"]')
       );
+
+      //Aqui force el click al "active" y verifico si cambio el filterSig correctamente. 
       filterLinks[1].triggerEventHandler('click');
       expect(todosService.filterSig()).toBe(FilterEnum.active);
     });
