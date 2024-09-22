@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { TodosService } from '../../services/todos.service';
 import { FilterEnum } from '../../types/filter.enum';
 
-fdescribe('FooterComponent', () => {
+describe('FooterComponent', () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
   let todosService: TodosService;
@@ -108,7 +108,7 @@ fdescribe('FooterComponent', () => {
   });
 
 
-  fdescribe('filters ME', () => {
+  describe('filters ME', () => {
     it('highlights default filter ME', () => {
       const filterLinks = fixture.debugElement.queryAll(
         By.css('[data-testid="filterLink"]')
