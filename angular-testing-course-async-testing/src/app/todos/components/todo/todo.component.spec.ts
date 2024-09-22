@@ -98,7 +98,7 @@ describe('TodoComponent', () => {
    */
 
 // fakeAsync no debe usarse con llamadas HTTP
-it('debería enfocar después de activar la edición', fakeAsync(() => {
+fit('debería enfocar después de activar la edición', fakeAsync(() => {
   component.isEditing = true;
 
   // Angular no activará ngOnChanges automáticamente cuando se establece manualmente isEditing.

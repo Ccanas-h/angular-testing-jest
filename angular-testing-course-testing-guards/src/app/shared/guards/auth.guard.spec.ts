@@ -24,7 +24,14 @@ describe('AuthGuard', () => {
   it(
     'returns false for not logged in user',
     waitForAsync(() => {
-      jest.spyOn(router, 'navigateByUrl').mockImplementation();
+
+      // jest.spyOn(router, 'navigateByUrl').mockImplementation();
+      spyOn(router, 'navigateByUrl').and.callFake(() => {});
+
+      /**
+       * TestBed.runInInjectionContext asegura que el guard se ejecuta con las dependencias necesarias en el contexto adecuado, 
+       * facilitando pruebas precisas y evitando errores relacionados con la falta de inyección.
+       */
       TestBed.runInInjectionContext(() => {
         return authGuard();
       }).subscribe((result) => {
