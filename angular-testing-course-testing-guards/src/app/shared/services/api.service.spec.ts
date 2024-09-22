@@ -33,14 +33,7 @@ describe('ApiService', () => {
   });
 
   describe('getTags', () => {
-    /**
-     * 2 Formas de Escribir el mismo test. 
-     */
-
     it('should return a list of tags', () => {
-
-      //Con este modo, debemos hacer el subscribe, pero guardar el valor del subscribe dentro de una variable externa. 
-      // Y escribir el test de forma ordenada sincronicamente, con el expect al final. 
       let tags: TagInterface[] | undefined;
       apiService.getTags().subscribe((response) => {
         tags = response;
@@ -52,15 +45,10 @@ describe('ApiService', () => {
 
     it(
       'should return a list of tags with waitForAsync',
-
-      //con waitForAsync usamos subscribe y podemos lanzar el expect de forma directa. 
-      //Ya que debe terminar el resto de llamadas, asincronicas para luego lanzar el test. 
       waitForAsync(() => {
         apiService.getTags().subscribe((response) => {
           expect(response).toEqual([{ id: '1', name: 'foo' }]);
         });
-
-        // waitForAsync espera a que todas las llamadas asincrónicas (como observables) se completen antes de terminar la prueba.
         const req = httpTestingController.expectOne(
           'http://localhost:3004/tags'
         );

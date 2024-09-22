@@ -86,40 +86,14 @@ describe('TodoComponent', () => {
     expect(todosService.changeTodo).toHaveBeenCalledWith('1', 'foo');
   });
 
-
-
-  it('should focus after editing activation made By me ', fakeAsync(() => {
-
+  it('should focus after editing activation', fakeAsync(() => {
+    component.isEditing = true;
+    component.ngOnChanges({
+      isEditing: new SimpleChange(false, true, false),
+    });
+    fixture.detectChanges();
+    tick();
+    const edit = fixture.debugElement.query(By.css(':focus'));
+    expect(edit).toBeTruthy();
   }));
-
-
-  /**
-   * Para ver con httpCall dirigirse a \src\app\shared\services\api.service.spec.ts
-   */
-
-// fakeAsync no debe usarse con llamadas HTTP
-it('debería enfocar después de activar la edición', fakeAsync(() => {
-  component.isEditing = true;
-
-  // Angular no activará ngOnChanges automáticamente cuando se establece manualmente isEditing.
-  // Necesitamos forzarlo nosotros mismos llamando a ngOnChanges y pasando los siguientes parámetros:
-  // 1. previousValue (false): el estado anterior de isEditing.
-  // 2. currentValue (true): el nuevo estado de isEditing.
-  // 3. firstChange (false): indica que este no es el primer cambio para isEditing.
-  component.ngOnChanges({
-    isEditing: new SimpleChange(false, true, false),
-  });
-
-  // Simula la actualización de la vista después de un cambio en el estado del componente.
-  fixture.detectChanges();
-
-  // Simula el paso del tiempo en fakeAsync. En este caso, tick(0) omite cualquier setTimeout(0) en ngOnChanges.
-  // Si setTimeout dentro de ngOnChanges tarda 1000ms, usaríamos tick(1000) para simular esa demora.
-  tick();
-
-  const edit = fixture.debugElement.query(By.css(':focus'));
-  expect(edit).toBeTruthy();
-}));
-
-
 });
