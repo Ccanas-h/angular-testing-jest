@@ -1,11 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { TodoComponent } from './todo.component';
 import { TodosService } from '../../services/todos.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { first } from 'rxjs';
+import { SimpleChange } from '@angular/core';
 
-fdescribe('TodoComponent', () => {
+describe('TodoComponent', () => {
   let component: TodoComponent;
   let fixture: ComponentFixture<TodoComponent>;
   let todosService: TodosService;
@@ -41,49 +47,20 @@ fdescribe('TodoComponent', () => {
     expect(label.nativeElement.textContent).toEqual('foo');
   });
 
-
-  it('should toggle a todo made by ME', () => {
-    // jest.spyOn(todosService, 'toggleTodo').mockImplementation(() => {});
-    spyOn(todosService, 'toggleAll').and.callFake(() => {});
-    const check = fixture.debugElement.query(By.css('[data-testid="toggle"]'));
-    check.nativeElement.click();
-    expect(todosService.toggleTodo).toHaveBeenCalledWith('1');
-  });
-
   it('should toggle a todo', () => {
-    // jest.spyOn(todosService, 'toggleTodo').mockImplementation(() => {});
-    spyOn(todosService, 'toggleAll').and.callFake(() => {});
+    jest.spyOn(todosService, 'toggleTodo').mockImplementation(() => {});
     const toggle = fixture.debugElement.query(By.css('[data-testid="toggle"]'));
     toggle.nativeElement.click();
     expect(todosService.toggleTodo).toHaveBeenCalledWith('1');
   });
 
-
-  it('should remove a todo made by ME', () => {
-    // jest.spyOn(todosService, 'toggleTodo').mockImplementation(() => {});
-    spyOn(todosService, 'removeTodo').and.callFake(() => {});
-    const button = fixture.debugElement.query(By.css('[data-testid="destroy"]'));
-    button.nativeElement.click();
-    expect(todosService.removeTodo).toHaveBeenCalledWith('1');
-  });
-
   it('should remove a todo', () => {
-    // jest.spyOn(todosService, 'removeTodo').mockImplementation(() => {});
-    spyOn(todosService, 'removeTodo').and.callFake(() => {});
+    jest.spyOn(todosService, 'removeTodo').mockImplementation(() => {});
     const destroy = fixture.debugElement.query(
       By.css('[data-testid="destroy"]')
     );
     destroy.nativeElement.click();
     expect(todosService.removeTodo).toHaveBeenCalledWith('1');
-  });
-
-
-  it('should activate editing made by ME', () => { 
-    const label = fixture.debugElement.query(
-      By.css('[data-testid="destroy"]')
-    );
-    label.nativeElement.dblclick();
-    expect(component.setEditingId.emit).toHaveBeenCalledWith('1');
   });
 
   it('should activate editing', () => {
@@ -97,19 +74,26 @@ fdescribe('TodoComponent', () => {
   });
 
   it('should change todo', () => {
-    // jest.spyOn(todosService, 'changeTodo').mockImplementation(() => {});
-    spyOn(todosService, 'changeTodo').and.callFake(() => {});
+    jest.spyOn(todosService, 'changeTodo').mockImplementation(() => {});
     component.isEditing = true;
     fixture.detectChanges();
 
     const edit = fixture.debugElement.query(By.css('[data-testid="edit"]'));
     edit.nativeElement.value = 'foo';
-
-    // Simula el evento de teclado 'keyup' con la tecla 'Enter' en el elemento edit para desencadenar 
-    // el cambio del "todo", permitiendo probar la interacción de edición en los tests.
     edit.nativeElement.dispatchEvent(
       new KeyboardEvent('keyup', { key: 'Enter' })
     );
     expect(todosService.changeTodo).toHaveBeenCalledWith('1', 'foo');
   });
+
+  it('should focus after editing activation', fakeAsync(() => {
+    component.isEditing = true;
+    component.ngOnChanges({
+      isEditing: new SimpleChange(false, true, false),
+    });
+    fixture.detectChanges();
+    tick();
+    const edit = fixture.debugElement.query(By.css(':focus'));
+    expect(edit).toBeTruthy();
+  }));
 });
