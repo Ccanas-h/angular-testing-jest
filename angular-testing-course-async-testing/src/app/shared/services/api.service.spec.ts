@@ -50,6 +50,7 @@ describe('ApiService', () => {
       expect(tags).toEqual([{ id: '1', name: 'foo' }]);
     });
 
+
     it(
       'should return a list of tags with waitForAsync',
 
@@ -67,6 +68,8 @@ describe('ApiService', () => {
         req.flush([{ id: '1', name: 'foo' }]);
       })
     );
+
+    
   });
 
   describe('createTag', () => {
